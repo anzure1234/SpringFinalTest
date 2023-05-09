@@ -1,0 +1,10 @@
+.title{
+    border-bottom: 1px solid orange;
+}
+.btn-group{
+    display: flex;
+    justify-content: flex-end;
+}
+.table-head{
+    background-color: antiquewhite;
+}
