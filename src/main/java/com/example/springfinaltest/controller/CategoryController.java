@@ -17,40 +17,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class CategoryController {
-    private final CategoryService categoryService;
-    private final CertService certService;
 
-
-    public CategoryController(CategoryService categoryService, CertService certService) {
-        this.categoryService = categoryService;
-        this.certService = certService;
-    }
-
-    @GetMapping("/category")
-    public String showCategory(Model model) {
-        model.addAttribute("categoryList", new CategoryListDto());
-        return "/index";
-    }
-
-    @PostMapping("/category/add")
-    public String addCategory(@Valid CategoryListDto categoryListDto,@Valid CertListDto certListDto, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
-        if (bindingResult.hasErrors()) {
-            return "/index";
-        }
-        Category category = new Category();
-        Cert cert = new Cert();
-        BeanUtils.copyProperties(categoryListDto, category);
-        BeanUtils.copyProperties(certListDto, cert);
-
-        categoryService.save(category);
-
-        certService.save(cert);
-        redirectAttributes.addFlashAttribute("successMessage", "category.add.success");
-        return "redirect:/category";
-    }
-
-
-    @PostMapping("/category/edit/{id}")
 
 
 

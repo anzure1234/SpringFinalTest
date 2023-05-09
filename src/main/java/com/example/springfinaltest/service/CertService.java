@@ -1,6 +1,9 @@
 package com.example.springfinaltest.service;
 
 import com.example.springfinaltest.entity.Cert;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.util.List;
 
@@ -9,5 +12,7 @@ public interface CertService {
 
     void delete(String id);
 
-    List<Cert> showAll();
+    Page<Cert> findAllPaging(Specification<Cert> specification, Pageable pageable);
+
+
 }
