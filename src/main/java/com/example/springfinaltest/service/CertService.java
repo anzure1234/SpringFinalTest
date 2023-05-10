@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface CertService {
     void save(Cert cert);
@@ -13,6 +14,8 @@ public interface CertService {
     void delete(String id);
 
     Page<Cert> findAllPaging(Specification<Cert> specification, Pageable pageable);
+
+    Optional<Cert> findById(String id);
 
 
 }

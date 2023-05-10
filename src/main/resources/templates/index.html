@@ -22,7 +22,9 @@
             </h1>
         </div>
     </div>
-    <form id="login-form" class="form" th:action="@{/cert/add}" method="post">
+    <form id="login-form" class="form"
+          th:action="${certListDto.id!=null}? @{/cert/update/{id}(id=${certListDto.id})} : @{/cert/add}"
+          th:object="${certListDto}" method="post">
         <div class="row">
             <div class="col-6">
                 <div class="mb-3">
@@ -112,7 +114,7 @@
                 <td th:text="${cert.category.name}"></td>
                 <td>
                     <form th:action="@{/cert/delete/{id}(id=${cert.id})}" th:method="post">
-                        <button type="submit" class="btn btn-danger">Delete</button>
+                        <button type="submit" class="btn btn-danger" onclick="return confirmDelete();">Delete</button>
                     </form>
                 </td>
             </tr>
@@ -120,19 +122,19 @@
         </table>
         <nav aria-label="Page navigation example" th:if="${certPage.getTotalPages()>1}">
             <ul class="pagination">
-<!--                <li class="page-item" th:if="${certPage.hasPrevious()}">-->
-<!--                    <a class="page-link"-->
-<!--                       th:href="@{'/content?page=' + ${certPage.previousPageable().pageNumber+1}}">Previous</a>-->
-<!--                </li>-->
+                <li class="page-item" th:if="${certPage.hasPrevious()}">
+                    <a class="page-link"
+                       th:href="@{'/cert?page=' + ${certPage.previousPageable().pageNumber+1}}">Previous</a>
+                </li>
 
 
                 <li class="page-item" th:each="page : ${#numbers.sequence(1,certPage.getTotalPages())}">
                     <a class="page-link" th:text="${page}" th:href="@{cert(page=${page})}"></a></li>
 
 
-<!--                <li class="page-item" th:if="${certPage.hasNext()}">-->
-<!--                    <a class="page-link"-->
-<!--                       th:href="@{'/content?page=' + ${certPage.nextPageable().pageNumber+1}}">Next</a></li>-->
+                <li class="page-item" th:if="${certPage.hasNext()}">
+                    <a class="page-link"
+                       th:href="@{'/cert?page=' + ${certPage.nextPageable().pageNumber+1}}">Next</a></li>
             </ul>
         </nav>
     </div>
@@ -148,4 +150,9 @@
         crossorigin="anonymous"
 ></script>
 </body>
+<script>
+    function confirmDelete() {
+        return confirm('Are you sure you want to delete this item?');
+    }
+</script>
 </html>

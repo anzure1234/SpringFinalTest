@@ -3,6 +3,7 @@ package com.example.springfinaltest.service;
 import com.example.springfinaltest.entity.Category;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface CategoryService {
 
@@ -12,6 +13,6 @@ public interface CategoryService {
 
     void delete(Long id);
 
-    Category findById(Long id);
+    Optional<Category> findById(Long id);
 
 }

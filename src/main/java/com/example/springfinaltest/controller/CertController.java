@@ -8,6 +8,7 @@ import com.example.springfinaltest.entity.Cert;
 import com.example.springfinaltest.service.CategoryService;
 import com.example.springfinaltest.service.CertService;
 import jakarta.validation.Valid;
+import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
@@ -15,6 +16,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @Controller
 public class CertController {
@@ -35,17 +38,23 @@ public class CertController {
         PageRequest pageRequest = PageRequest.of(page - 1, size);
         Page<Cert> certPage = certService.findAllPaging(null,pageRequest);
         model.addAttribute("certPage", certPage);
-//        model.addAttribute("cert", new Cert());
+        model.addAttribute("certListDto", new CertListDto());
         return "/index";
     }
 
-    @PostMapping("/cert/add" )
-    public String saveCert(Model model, @ModelAttribute Cert cert, @RequestParam("category") Long id){
 
-        Category category = categoryService.findById(id);
-        cert.setCategory(category);
-        certService.save(cert);
-        model.addAttribute("cert", new Cert());
+    @PostMapping("/cert/add" )
+    public String saveCert(Model model, @ModelAttribute CertListDto certListDto, @RequestParam("category") Long id){
+        Cert cert = new Cert();
+        Optional<Category> categoryOptional = categoryService.findById(id);
+
+        if (categoryOptional.isPresent()) {
+            Category category = categoryOptional.get();
+            BeanUtils.copyProperties(certListDto, cert);
+            cert.setCategory(category);
+            certService.save(cert);
+            model.addAttribute("certListDto", new CertListDto());
+        }
         return "redirect:/cert";
 
     }
@@ -55,4 +64,17 @@ public class CertController {
         certService.delete(id);
         return "redirect:/cert";
     }
+
+    @PostMapping("/cert/edit/{id}")
+    public String update(@PathVariable("id") String id, @Valid CertListDto certListDto, BindingResult result, Model model){
+        Optional<Cert> certOptional = certService.findById(id);
+        if(certOptional.isPresent()){
+        Cert cert = certOptional.get();
+        BeanUtils.copyProperties(certListDto, cert);
+        certService.save(cert);
+        return "redirect:/cert";
+        }
+        return "redirect:/cert";
+    }
+
 }
