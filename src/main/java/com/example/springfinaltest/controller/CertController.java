@@ -17,6 +17,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Controller
@@ -44,7 +46,20 @@ public class CertController {
 
 
     @PostMapping("/cert/add" )
-    public String saveCert(Model model, @ModelAttribute CertListDto certListDto, @RequestParam("category") Long id){
+    public String saveCert(Model model,@Valid @ModelAttribute CertListDto certListDto, @RequestParam("category") Long id, BindingResult bindingResult){
+        if (bindingResult.hasErrors()) {
+            return "redirect:/cert";
+        }
+        if(certListDto.getId().isEmpty()){
+            bindingResult.rejectValue("id", "cert.id.not.empty");
+        }
+        if(certListDto.getCert_name().isEmpty()){
+            bindingResult.rejectValue("name", "cert.name.not.empty");
+        }
+        if (bindingResult.hasErrors()) {
+            return "redirect:/cert";
+        }
+
         Cert cert = new Cert();
         Optional<Category> categoryOptional = categoryService.findById(id);
 
@@ -66,7 +81,10 @@ public class CertController {
     }
 
     @PostMapping("/cert/edit/{id}")
-    public String update(@PathVariable("id") String id, @Valid CertListDto certListDto, BindingResult result, Model model){
+    public String update(@PathVariable("id") String id, @Valid CertListDto certListDto, BindingResult result){
+        if (result.hasErrors()) {
+            return "redirect:/cert";
+        }
         Optional<Cert> certOptional = certService.findById(id);
         if(certOptional.isPresent()){
         Cert cert = certOptional.get();
@@ -75,6 +93,12 @@ public class CertController {
         return "redirect:/cert";
         }
         return "redirect:/cert";
+    }
+
+    @GetMapping("/cert/classify")
+    @ResponseBody
+    public List<Map<String, Object>> getClassify() {
+        return categoryService.getCategoryStats();
     }
 
 }

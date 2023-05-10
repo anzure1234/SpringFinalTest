@@ -17,5 +17,8 @@ public interface CertService {
 
     Optional<Cert> findById(String id);
 
+    long countByCategory(int categoryId);
+
+
 
 }

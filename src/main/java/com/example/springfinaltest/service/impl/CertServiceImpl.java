@@ -42,5 +42,10 @@ public class CertServiceImpl implements CertService {
         return certRepository.findById(id);
     }
 
+    @Override
+    public long countByCategory(int categoryId) {
+        return certRepository.countByCategory_Id(categoryId);
+    }
+
 
 }

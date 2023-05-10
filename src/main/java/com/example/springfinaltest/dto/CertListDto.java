@@ -11,10 +11,9 @@ public class CertListDto {
     @NotBlank(message = "{common.error.required}")
     private String id;
 
-    @NotBlank(message = "{common.error.required}")
+
     private String cert_name;
 
-    @NotBlank(message = "{common.error.required}")
     private double cost;
 
 
